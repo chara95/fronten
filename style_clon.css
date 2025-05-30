@@ -1,0 +1,895 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); */
+:root {
+    --bg-color: #2a2a2a; /* Fondo principal oscuro */
+    --card-bg-color: #3b3b3b; /* Fondo de las "tarjetas" o secciones */
+    --border-color: #444; /* Borde sutil */
+    --text-color-primary: #f0f0f0; /* Color de texto claro */
+    --text-color-secondary: #aaa; /* Color de texto secundario/gris */
+    --primary-color: #ffd700; /* Dorado para elementos interactivos/resaltados (ej. nav activo, foco) */
+    --success-color: #28a745; /* Verde para éxito */
+    --error-color: #dc3545; /* Rojo para error */
+    --info-color: #17a2b8; /* Azul/Cyan para información */
+    --input-bg-color: #4a4a4a; /* Fondo de inputs/selects */
+    --button-bg-color: #555; /* Fondo general de botones */
+    --button-hover-bg-color: #666; /* Fondo de botones al pasar el ratón */
+    --border-radius: 8px;
+    --font-family: 'Press Start 2P', cursive; /* Asegúrate de que esta fuente esté importada */
+}
+
+
+
+/* --- Fuentes de Google Fonts --- */
+body {
+    font-family: 'Share Tech Mono', monospace; /* Fuente más tecnológica para el cuerpo */
+    background-color: #121212; /* Fondo aún más oscuro */
+    color: #e0e0e0;
+    margin: 0;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif; /* Fuente futurista para títulos */
+    color: #00ff00; /* Verde neón para el título principal */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5), 0 0 10px rgba(0, 255, 0, 0.3); /* Efecto de brillo */
+}
+
+/* Contenedor principal de la aplicación */
+#appMainContent {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    overflow-y: hidden;
+    padding: 0 10px;
+}
+
+/* Estilos base para TODAS tus pantallas */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Contenedor visual común para todas las pantallas (el "recuadro" de la app) */
+.game-container {
+    background-color: #1f1f1f; /* Fondo oscuro ligeramente más claro que el body */
+    border-radius: 15px; /* Más redondeado */
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1); /* Sombra de neón */
+    padding: 25px; /* Un poco menos de padding si el diseño se aprieta */
+    border: 1px solid rgba(0, 255, 0, 0.3); /* Borde sutil de neón */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Estilos específicos de la PANTALLA DE JUEGO --- */
+
+
+.header-section {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.main-balance {
+    font-size: 1.5em;
+    color: #00FFFF; /* Azul cian brillante para el balance */
+    margin-bottom: 15px;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+.main-balance span {
+    font-size: 1.2em; /* Hace el número un poco más grande */
+    font-weight: bold;
+}
+
+#gameScreen h1 {
+    font-size: 2.8em;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.status-indicator {
+    font-size: 1.1em;
+    color: #FFD700; /* Dorado para el estado */
+    margin-bottom: 25px;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+/* --- Estilos para las Tarjetas/Paneles (Generalizado) --- */
+.card {
+    background-color: #2a2a2a; /* Fondo más oscuro para las tarjetas */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.6); /* Sombra interna y externa */
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card h2 {
+    color: #FFD700; /* Dorado para títulos de tarjeta */
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed rgba(255, 215, 0, 0.3); /* Línea punteada */
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+/* --- Progreso del Bloque (incluyendo la info de temp/enfriamiento) --- */
+.progress-card {
+    position: relative; /* Para posicionar los stats dentro */
+    padding-bottom: 70px; /* Espacio extra para los iconos al final */
+    /* Estilos para los nuevos párrafos de temperatura y enfriamiento */
+    text-align: center;
+}
+
+.progress-card p:not(.progress-display):not(.block-info p) {
+    font-size: 1em;
+    color: #bbbbbb;
+    margin: 5px 0;
+}
+
+.progress-card p:not(.progress-display):not(.block-info p) span {
+    font-weight: bold;
+    color: #00FFFF; /* Azul cian para los valores de estado */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+/* Nuevo estilo para el contenedor de enfriamiento y su botón */
+.cooldown-info-inline {
+    display: flex; /* Para que el texto y el botón estén en la misma línea */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    gap: 10px; /* Espacio entre el texto y el botón */
+    margin-top: 10px; /* Espacio superior */
+    margin-bottom: 15px; /* Espacio inferior antes de la barra de progreso */
+    flex-wrap: wrap; /* Permitir que se envuelvan en pantallas pequeñas */
+}
+
+/* Restablecemos los estilos para el botón de enfriamiento */
+.cooldown-button {
+    background-color: #FFD700; /* Dorado para enfriar */
+    color: #1a1a1a;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    padding: 8px 15px; /* Ajustado para que sea más pequeño que los botones principales */
+    font-size: 0.9em; /* Fuente un poco más pequeña */
+    border-radius: 8px; /* Bordes redondeados */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cooldown-button:hover:not(:disabled) {
+    background-color: #E6B800;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+    transform: translateY(-2px);
+}
+
+.cooldown-button:disabled {
+    background-color: #444;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.progress-card .progress-bar-outer {
+    width: 90%;
+    background-color: #444;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 25px;
+    margin: 15px 0;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.progress-card .progress-bar-inner {
+    height: 100%;
+    width: 0%;
+    background-color: #00ff00; /* Verde neón para el progreso */
+    border-radius: 20px;
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* Brillo en la barra */
+}
+
+.progress-display {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #00ff00; /* Verde neón */
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.block-info {
+    text-align: center;
+    font-size: 1.1em;
+    color: #bbbbbb;
+    margin-bottom: 20px; /* Añadimos margen para separar de los nuevos stats */
+}
+
+.block-info span {
+    color: #FFD700; /* Dorado para recompensa y número de bloque */
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+/* --- NUEVOS ESTILOS PARA LOS ÍCONOS DE ESTADÍSTICAS INTEGRADOS --- */
+.integrated-stats {
+    position: absolute;
+    bottom: 0px; /* Posicionamiento absoluto al final de la tarjeta */
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; /* Distribuye uniformemente */
+    align-items: center;
+    padding: 10px 0; /* Padding vertical para no pegar al borde */
+    /* border-top: 1px solid rgba(255, 255, 255, 0.05); /* Línea divisoria */
+    background-color: rgba(30, 30, 30, 0.8); /* Fondo semitransparente para los stats */
+    border-bottom-left-radius: 10px; /* Esquinas redondeadas */
+    border-bottom-right-radius: 10px;
+    backdrop-filter: blur(2px); /* Efecto blur suave */
+}
+
+.stat-item-inline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 5px; /* Pequeño padding lateral */
+}
+
+.stat-item-inline .icon {
+    font-size: 2em; /* Tamaño de los íconos */
+    margin-bottom: 5px;
+    display: block;
+}
+
+.stat-item-inline p {
+    margin: 0;
+    font-size: 0.95em; /* Tamaño del texto del valor */
+    font-weight: bold;
+    color: #e0e0e0; /* Color general del texto */
+}
+
+.stat-item-inline span {
+    color: #00FFFF; /* Azul cian para los valores */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.temperature-stat .icon { color: #F44336; } /* Rojo para temperatura */
+.hashrate-stat .icon { color: #00FFFF; } /* Azul cian para hashrate */
+.blocks-mined-stat .icon { color: #FFD700; } /* Dorado para bloques */
+
+/* --- Control de Botones (Iniciar/Detener/Enfriar) --- */
+.control-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.action-button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px; /* Asegura un ancho mínimo */
+}
+
+.primary-button {
+    background-color: #00ff00; /* Verde neón */
+    color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.primary-button:hover:not(:disabled) {
+    background-color: #00cc00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    transform: translateY(-2px);
+}
+
+.secondary-button {
+    background-color: #555;
+    color: #e0e0e0;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.secondary-button:hover:not(:disabled) {
+    background-color: #666;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.action-button:disabled {
+    background-color: #444;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.cooldown-button {
+    background-color: #FFD700; /* Dorado para enfriar */
+    color: #1a1a1a;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+.cooldown-button:hover:not(:disabled) {
+    background-color: #E6B800;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+}
+
+
+/* --- Mini Log de Actividad --- */
+.mini-log-card {
+    text-align: left;
+    max-height: 150px; /* Altura máxima para el mini log */
+    overflow-y: auto; /* Permite scroll si hay muchas entradas */
+    padding-right: 15px; /* Espacio para el scrollbar */
+}
+
+.mini-log-card h3 {
+    color: #00FFFF; /* Azul cian para el título del mini log */
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed rgba(0, 255, 255, 0.3);
+    padding-bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+#activityLogMini {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#activityLogMini li {
+    font-size: 0.9em;
+    padding: 4px 0;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.05);
+    color: #cccccc;
+    white-space: nowrap; /* Evita que el texto se envuelva */
+    overflow: hidden; /* Oculta el desbordamiento */
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es muy largo */
+}
+#activityLogMini li:last-child {
+    border-bottom: none;
+}
+#activityLogMini li.success { color: #8BC34A; }
+#activityLogMini li.error { color: #F44336; }
+#activityLogMini li.info { color: #2196F3; }
+
+
+/* --- Estilos de Paneles Generales (para otras pantallas como Mejoras/Actividad/Retiro) --- */
+.panel {
+    background-color: #2a2a2a; /* Mismo fondo de tarjeta */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.panel h2, .panel h3 {
+    color: #FFD700; /* Dorado para títulos de panel */
+    margin-top: 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    width: 100%;
+    text-align: center;
+}
+
+/* --- PANTALLA DE MEJORAS --- */
+.upgrade-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.upgrade-button {
+    background-color: #007bff; /* Azul vibrante */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.upgrade-button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+}
+.upgrade-button:disabled {
+    background-color: #444;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+}
+.upgrade-button .upgrade-name {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #fff;
+}
+.upgrade-button .upgrade-cost {
+    font-size: 0.9em;
+    color: #FFD700; /* Dorado para el costo */
+}
+.upgrade-button .upgrade-stats {
+    font-size: 0.85em;
+    color: #cccccc;
+}
+
+/* --- PANTALLA DE ACTIVIDAD COMPLETA --- */
+#activityLogScreen .panel {
+    flex-grow: 1; /* Permite que el panel crezca para ocupar el espacio */
+    padding: 15px;
+}
+#activityLogScreen h2 {
+    color: #00FFFF; /* Azul cian para el título de actividad */
+    border-bottom-color: rgba(0, 255, 255, 0.3);
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-top: 5px;
+}
+
+.activity-list li {
+    font-size: 0.95em;
+    padding: 8px 0;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
+    color: #cccccc;
+}
+.activity-list li:last-child {
+    border-bottom: none;
+}
+/* Colores de log específicos, ya definidos en JS logActivity */
+.activity-list li.success { color: #8BC34A; }
+.activity-list li.error { color: #F44336; }
+.activity-list li.info { color: #2196F3; }
+
+
+/* --- PANTALLA DE RETIRO (CUENTA) --- */
+.info-card {
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.info-card p {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #cccccc;
+}
+.info-card span {
+    font-weight: bold;
+    color: #00FFFF; /* Azul cian */
+}
+
+.input-section {
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.input-section h2 {
+    color: #FFD700;
+    margin-top: 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+.input-section input {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #333;
+    color: #e0e0e0;
+    font-size: 1em;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.input-section input:focus {
+    border-color: #00ff00;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.input-section button {
+    background-color: #007bff; /* Azul estándar */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+}
+.input-section button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+#editEmailBtn { background-color: #FF8C00; } /* Naranja */
+#editEmailBtn:hover { background-color: #E07B00; }
+#requestWithdrawalBtn { background-color: #00ff00; color: #1a1a1a; } /* Verde neón */
+#requestWithdrawalBtn:hover { background-color: #00cc00; }
+
+
+.message {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    animation: fadeIn 0.5s ease-out; /* Animación para mensajes */
+}
+.message.success { background-color: #4CAF50; color: white; }
+.message.error { background-color: #F44336; color: white; }
+.message.info { background-color: #2196F3; color: white; }
+
+/* --- PANTALLA DE TÉRMINOS Y CONDICIONES --- */
+#termsScreen .info-card {
+    text-align: justify;
+    padding-right: 15px; /* Espacio para el scrollbar */
+    line-height: 1.6;
+}
+#termsScreen .info-card h3 {
+    color: #00FFFF; /* Azul cian para subtítulos de términos */
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+#termsScreen .info-card p {
+    margin-bottom: 15px;
+}
+.back-button {
+    background-color: #607D8B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+.back-button:hover {
+    background-color: #455A64;
+}
+
+
+/* --- Barra de navegación fija inferior --- */
+.fixed-bottom-nav {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1a1a1a; /* Fondo más oscuro para el nav */
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #333;
+    box-shadow: 0 -5px 15px rgba(0, 255, 0, 0.1); /* Sombra de neón tenue */
+    z-index: 1000;
+}
+.nav-button {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.8em;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    transition: color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+}
+.nav-button:hover, .nav-button.active {
+    color: #00ff00; /* Verde neón para el activo */
+    transform: translateY(-3px); /* Pequeño efecto de levantamiento */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+.nav-button .icon {
+    font-size: 1.8em;
+}
+.nav-button .text {
+    font-size: 0.9em;
+}
+
+
+/* --- Estilos para Scrollbar (Webkit) --- */
+.scrollable-content::-webkit-scrollbar {
+    width: 8px;
+}
+.scrollable-content::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 10px;
+}
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: #00ff00; /* Verde neón para el thumb */
+    border-radius: 10px;
+}
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: #00cc00;
+}
+/* Estilos para Scrollbar (Firefox) */
+.scrollable-content {
+    scrollbar-width: thin;
+    scrollbar-color: #00ff00 #2a2a2a;
+}
+
+/* --- Media Queries para Responsive Design --- */
+@media (max-width: 768px) {
+    #appMainContent {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 0 5px;
+    }
+
+    .game-container {
+        padding: 15px; /* Menor padding en móvil */
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    #gameScreen h1 {
+        font-size: 2em;
+    }
+    .main-balance {
+        font-size: 1.2em;
+    }
+    .status-indicator {
+        font-size: 1em;
+    }
+
+    .card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .progress-card {
+        padding-bottom: 60px; /* Ajuste para el nuevo espacio de iconos en móvil */
+    }
+    .progress-card .progress-bar-outer {
+        height: 20px;
+    }
+    .progress-display {
+        font-size: 1.1em;
+    }
+    .block-info {
+        font-size: 0.95em;
+    }
+
+    /* Ajustes para los íconos integrados en móvil */
+    .integrated-stats {
+        padding: 8px 0;
+    }
+    .stat-item-inline .icon {
+        font-size: 1.8em;
+    }
+    .stat-item-inline p {
+        font-size: 0.9em;
+    }
+
+
+    .action-button {
+        padding: 12px 20px;
+        font-size: 1.1em;
+        min-width: unset; /* Deja que el ancho se ajuste */
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
+
+    .cooldown-button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .mini-log-card {
+        max-height: 120px;
+    }
+    #activityLogMini li {
+        font-size: 0.8em;
+        padding: 3px 0;
+    }
+
+    .fixed-bottom-nav {
+        padding: 8px 0;
+    }
+    .nav-button {
+        font-size: 0.7em;
+        padding: 3px 5px;
+    }
+    .nav-button .icon {
+        font-size: 1.6em;
+    }
+}
+
+@media (max-width: 480px) {
+    #appMainContent {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .game-container {
+        padding: 10px;
+    }
+    #gameScreen h1 {
+        font-size: 2em;
+    }
+    .main-balance {
+        font-size: 1.1em;
+    }
+    .action-button {
+        font-size: 1em;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulseGreen {
+    0% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.6); }
+    100% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+}
+
+
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre label y control */
+    color: var(--text-color-primary); /* Color de texto para los labels */
+    font-size: 0.9em; /* Ajusta el tamaño de la fuente para los labels */
+}
+
+.input-group label {
+    font-weight: bold;
+    min-width: 120px; /* Ancho mínimo para los labels si quieres que estén alineados */
+    text-align: right; /* Alineación del texto del label */
+}
+
+/* Estilo para el SELECT y el INPUT de email */
+.withdrawal-input,
+.email-input {
+    width: calc(100% - 130px); /* Ajusta el ancho para dejar espacio al label */
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg-color);
+    color: var(--text-color-primary); /* Color del texto dentro del select/input */
+    font-family: var(--font-family); /* Usa la fuente del juego */
+    font-size: 0.9em; /* Tamaño de fuente para el contenido */
+    outline: none; /* Elimina el borde de enfoque predeterminado */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    /* Estilos específicos para SELECT (para controlar la apariencia del botón visible) */
+    -webkit-appearance: none; /* Elimina estilos por defecto de Webkit */
+    -moz-appearance: none;    /* Elimina estilos por defecto de Firefox */
+    appearance: none;         /* Elimina estilos por defecto del navegador */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f0f0f0%22%20d%3D%22M287%2C114.7L146.2%2C255.5L5.4%2C114.7H287z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha blanca personalizada */
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 10px;
+    cursor: pointer;
+}
+
+.withdrawal-input:focus,
+.email-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3); /* Un poco de sombra al enfocar */
+}
+
+/* Estilo para las OPCIONES dentro del SELECT */
+/* NOTA: Estos estilos son limitados y pueden no funcionar en todos los navegadores/OS
+   para el menú desplegable real una vez que se abre. */
+.withdrawal-input option {
+    background-color: var(--card-bg-color); /* Fondo de las opciones en el menú */
+    color: var(--text-color-primary);      /* Color del texto de las opciones */
+    padding: 8px 15px; /* Relleno para las opciones */
+}
+
+/* Estilo para la opción seleccionada en el menú (cuando se abre) */
+.withdrawal-input option:checked {
+    background-color: var(--primary-color); /* Fondo de la opción seleccionada */
+    color: var(--bg-color); /* Texto oscuro para la opción seleccionada */
+}
+
+
+
+/* Intento de estilizar las opciones del select (compatibilidad limitada) */
+.withdrawal-input option {
+    background-color: var(--card-bg-color) !important; /* Usar !important si otros estilos lo anulan */
+    color: var(--text-color-primary) !important;
+    font-family: var(--font-family) !important; /* Asegurar la fuente */
+    padding: 8px 15px !important;
+}
+
+/* Estilo para la opción que está "hover" o "active" en el menú desplegable */
+.withdrawal-input option:hover,
+.withdrawal-input option:focus,
+.withdrawal-input option:checked { /* 'checked' no aplica en el menú desplegado para todos */
+    background-color: var(--primary-color) !important; /* Tu color dorado */
+    color: var(--bg-color) !important; /* Texto oscuro sobre dorado */
+}

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASIC Miner</title>
+    <link rel="stylesheet" href="./style_clon.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+   <!-- <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.26.0/dist/pocketbase.min.js"></script> -->
+   <script src="./pocketbase.min.js"></script>
+    </head>
+
+<body>
+
+    <main id="appMainContent">
+
+        <section id="gameScreen" class="screen game-container">
+            <div class="card progress-card">
+                <p class="main-balance">Balance: <span id="balance">0.00000000</span> LTC</p>
+                <h2>Progreso del Bloque</h2>
+
+                <p>Estado de Temperatura: <span id="temperatureStatus">Óptimo</span></p>
+                <div class="cooldown-info-inline">
+                    <p>Enfriamiento: <span id="cooldownTimer">00:00:00</span></p>
+                    <button id="coolDownButton" class="action-button cooldown-button" disabled>Enfriar ASIC</button>
+                </div>
+
+                <p id="miningGlobalStatus" class="status-indicator">Estado: Detenido</p>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" id="miningProgressBar" style="width: 0%;"></div>
+                </div>
+                <p class="progress-display" id="miningProgressDisplay">0%</p>
+                <div class="block-info">
+                    <p>Bloque #<span id="currentBlockNumber">1</span></p>
+                    <p>Recompensa al completar: <span id="nextBlockRewardInfo">0.00000010</span> LTC</p>
+                </div>
+
+
+                <div class="integrated-stats">
+                    <div class="stat-item-inline temperature-stat">
+                        <span class="icon">🌡️</span>
+                        <p><span id="currentTemperature">30.0</span>°C</p>
+                    </div>
+                    <div class="stat-item-inline hashrate-stat">
+                        <span class="icon">⚡</span>
+                        <p><span id="hashRate">0</span> H/s</p>
+                    </div>
+                    <div class="stat-item-inline blocks-mined-stat">
+                        <span class="icon">🔗</span>
+                        <p><span id="totalBlocksMined">0</span> Bloques</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="control-buttons">
+                <button id="mineButton" class="action-button primary-button">Iniciar Minería</button>
+                <!-- <button id="stopMineButton" class="action-button secondary-button" disabled>Detener Minería</button> -->
+            </div>
+
+        </section>
+
+        <section id="upgradesScreen" class="screen game-container hidden">
+            <h2>Mejoras de Hardware</h2>
+            <div class="panel">
+                <h3>GPUs Disponibles</h3>
+                <div id="gpuUpgradeOptionsContainer" class="upgrade-options-container">
+                </div>
+            </div>
+            <div class="panel">
+                <h3>ASICs Disponibles</h3>
+                <div id="asicUpgradeOptionsContainer" class="upgrade-options-container">
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Sistemas de Enfriamiento</h3>
+                <div id="coolingUpgradeOptionsContainer" class="upgrade-options-container">
+                </div>
+            </div>
+        </section>
+
+        <section id="activityLogScreen" class="screen game-container hidden">
+            <h2>Registro de Actividad Completo</h2>
+            <div class="panel">
+                <ul id="activityLog" class="activity-list scrollable-content">
+                </ul>
+            </div>
+        </section>
+
+        <section id="withdrawalScreen" class="screen game-container hidden">
+            <h2>Solicitar Retiro</h2>
+            <!-- <div class="info-card">
+                <p>Saldo actual: <span id="currentWithdrawalBalance">0.00000000</span> LTC</p>
+            </div> -->
+            <div class="input-section">
+                <h2>Dirección de Billetera</h2>
+                 <p>Saldo actual: <span id="currentWithdrawalBalance">0.00000000</span> LTC</p>
+                <p id="emailDisplay"><span id="displayEmail">no configurado</span></p>
+                <button id="editEmailBtn">Cambiar Correo</button>
+                <div id="emailInputSection" style="display: none;">
+                    <input type="email" id="emailInput" placeholder="Ingrese su correo electrónico">
+                    <button id="saveEmailBtn">Guardar Correo</button>
+                </div>
+                <div class="input-section">
+                    <h2>Monto de Retiro</h2>
+                    <p>Comisión: 0.00001 LTC</p>
+                    <select id="withdrawalAmount" class="withdrawal-input">
+                        <option value="">-- Selecciona un monto --</option>
+                        <option value="0.0001">0.0001 LTC </option>
+                        <option value="0.0002">0.0002 LTC </option>
+                        <option value="0.0005">0.0005 LTC </option>
+                        <option value="0.001">0.001 LTC </option>
+                        <option value="0.002">0.002 LTC </option>
+                        <option value="0.005">0.005 LTC </option>
+                        <option value="0.01">0.01 LTC </option>
+                    </select>
+                    <button id="requestWithdrawalBtn">Solicitar Retiro</button>
+                </div>
+            </div>
+
+
+            <p class="message" id="withdrawalMessage" style="display: none;"></p>
+        </section>
+
+        <section id="termsScreen" class="screen game-container hidden">
+            <h2>Términos y Condiciones</h2>
+            <div class="info-card scrollable-content">
+                <h3>1. Aceptación de los Términos</h3>
+                <p>Al acceder y utilizar los servicios de ASIC Miner, usted acepta estar sujeto a los presentes Términos
+                    y Condiciones, nuestra Política de Privacidad y todas las leyes y regulaciones aplicables. Si no
+                    está de acuerdo con alguno de estos términos, le está prohibido usar o acceder a este sitio. **Las
+                    recompensas obtenidas en esta aplicación son reales y se envían a su cuenta de FaucetPay.**</p>
+
+                <h3>2. Funcionamiento de la Aplicación y Recompensas</h3>
+                <p>ASIC Miner es una aplicación de simulación de minería que le permite ganar recompensas en LTC
+                    (Litecoin) al simular la minería de bloques. Estas recompensas son acumuladas y pueden ser retiradas
+                    a su dirección de LTC vinculada a su cuenta de FaucetPay. La aplicación no requiere ninguna
+                    inversión de dinero real por parte del usuario. Todas las "compras" o "mejoras" dentro de la
+                    aplicación se realizan con la moneda virtual obtenida dentro del juego.</p>
+
+                <h3>3. Integración con FaucetPay</h3>
+                <p>Para recibir sus recompensas, es indispensable que tenga una cuenta válida en FaucetPay y que la
+                    dirección de correo electrónico que registre en nuestra aplicación esté vinculada a esa cuenta de
+                    FaucetPay. Realizamos una validación para asegurar la existencia de su cuenta en FaucetPay antes de
+                    guardar su correo electrónico. No nos hacemos responsables por transacciones fallidas debido a
+                    direcciones de correo electrónico incorrectas o no vinculadas a FaucetPay.</p>
+
+                <h3>4. Privacidad</h3>
+                <p>Su privacidad es importante para nosotros. La aplicación puede recopilar datos de uso anónimos para
+                    mejorar la experiencia del usuario. Cualquier información personal proporcionada (como un correo
+                    electrónico para retiro) será tratada de acuerdo con nuestra Política de Privacidad y las leyes de
+                    protección de datos aplicables.</p>
+
+                <h3>5. Retiros de Recompensas</h3>
+                <p>Las recompensas en LTC se acumulan en su saldo dentro de la aplicación. Los retiros se procesarán a
+                    su cuenta de FaucetPay, sujetos a los montos mínimos de retiro y comisiones establecidos por la
+                    aplicación y FaucetPay. Los tiempos de procesamiento pueden variar. La aplicación se reserva el
+                    derecho de auditar las solicitudes de retiro para prevenir fraudes o actividades sospechosas.</p>
+
+                <h3>6. Modificaciones</h3>
+                <p>Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. El uso
+                    continuado de la aplicación después de dichas modificaciones constituye su aceptación de los nuevos
+                    términos.</p>
+
+                <h3>7. Limitación de Responsabilidad</h3>
+                <p>La aplicación se proporciona "tal cual". No garantizamos que la aplicación sea ininterrumpida o libre
+                    de errores. No seremos responsables de ningún daño, pérdida de fondos o datos derivados del uso o la
+                    imposibilidad de usar la aplicación, o de interrupciones en los servicios de terceros (como
+                    FaucetPay).</p>
+
+                <h3>8. Ley Aplicable</h3>
+                <p>Estos Términos se regirán e interpretarán de acuerdo con las leyes del país donde la aplicación es
+                    utilizada, sin dar efecto a sus disposiciones sobre conflicto de leyes.</p>
+            </div>
+            <button class="back-button" onclick="showScreen('gameScreen')">Volver al Juego</button>
+        </section>
+
+    </main>
+
+    <footer class="fixed-bottom-nav">
+        <button id="navHomeBtn" class="nav-button active">
+            <span class="icon">🏠</span>
+            <span class="text">Juego</span>
+        </button>
+        <button id="navUpgradesBtn" class="nav-button">
+            <span class="icon">⚙️</span>
+            <span class="text">Mejoras</span>
+        </button>
+        <button id="navActivityBtn" class="nav-button">
+            <span class="icon">📜</span>
+            <span class="text">Actividad</span>
+        </button>
+        <button id="navAccountBtn" class="nav-button">
+            <span class="icon">💳</span>
+            <span class="text">Retiro</span>
+        </button>
+        <button id="navTermsBtn" class="nav-button">
+            <span class="icon">📄</span>
+            <span class="text">Términos</span>
+        </button>
+    </footer>
+
+    <!-- <script src="file:///android_asset/script.js"></script> -->
+    <script src="script_clon.js"></script>
+</body>
+
+</html>
